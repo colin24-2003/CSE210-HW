@@ -5,7 +5,7 @@ class Program
     static void Main(string[] args)
     {
         Console.Write("What is your grade percentage?: ");
-        string grade = Console.ReadLine();
+        string grade = Console.ReadLine(); // anything from Console.ReadLine returns a string naturally like input in python
         int userGrade = int.Parse(grade);
         char letterGrade = 'F';
         if (userGrade >= 90)
