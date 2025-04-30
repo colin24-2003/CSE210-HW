@@ -12,7 +12,9 @@ class Program
     PromptUserNumber - Asks for and returns the user's favorite number (as an integer)
     SquareNumber - Accepts an integer as a parameter and returns that number squared (as an integer)
     DisplayResult - Accepts the user's name and the squared number and displays them.
-    
+    function example: returnType(string, void, int) FunctionName(data type parameter1, data typeparameter2)
+    return int, string, double, etc. if no data type such as void then you don't need to return anything like in Main and DisplayWelcome
+
     */
     static void Main(string[] args)
     {
@@ -47,9 +49,9 @@ class Program
     static int PromptUserNumber() // allows to return an int
     {
         // prompts user to enter number, changes string into an int and then returns favNum
-        Console.Write("Enter your favorite number: ");
-        string favNumString = Console.ReadLine();   
-        int favNum = int.Parse(favNumString);        
+        Console.Write("Enter your favorite number: ");  
+        // string favNumString = Console.ReadLine(); |removed not needed code "string favNumString = Console.ReadLine();"     
+        int favNum = int.Parse(Console.ReadLine());  
         return favNum;
     }
 
