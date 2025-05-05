@@ -60,3 +60,6 @@ class Program
         Console.WriteLine($"Hello {name}, your square of your number is {squareNum}");
     }
 }
+
+// absrtraction is the process of hididng unneccesary details of a function or program
+// The print() function was written in 3,000 lines of C code, but all we see is print(). This makes it convenient
