@@ -12,7 +12,7 @@ public class WritingAssignment : Assignments
 
    public string  GetWritingInformation()
     {
-        return $"{StudentName} - {Topic}\n {_title} {StudentName}";
+        return $"{StudentName} - {Topic}\n {_title} by {StudentName}";
     }
 
 }

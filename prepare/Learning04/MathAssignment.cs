@@ -13,6 +13,6 @@ public class MathAssignment : Assignments
     // Use the public properties StudentName and Topic from the base class
     public string GetHomeworkList()
     {
-        return $"{StudentName} - {Topic}\n { _textbookSection} Problems: {_problems}";  // Access via properties, NOT private fields
+        return $"{StudentName} - {Topic}\n Section: { _textbookSection} Problems: {_problems}";  // Access via properties, NOT private fields
     }
 }
