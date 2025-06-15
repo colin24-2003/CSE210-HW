@@ -1,0 +1,393 @@
+// BroCode CLASSES
+// CLASS = A bundle of related code
+// Can be used as a blueprint to create objects (OOP)
+/*class Program
+{
+    static void Main(string[] args)
+    {
+        Messages.Hello();
+        Messages.Waiting();
+        Messages.Bye();
+    }
+
+    static class Messages
+    {
+     public static  void Hello() // method that is meant to display a hello message
+        {
+            Console.WriteLine("Hello! Welcome to the program");
+        }
+
+      public static void Waiting()
+        {
+            Console.WriteLine("I am waiting for something");
+        }
+      public static void Bye()
+        {
+           Console.WriteLine("Goodbye"); 
+        }
+    }
+}*/ END OF CLASSES
+
+########################################
+// OBJECTS = An instance of a class
+// Objects can have fields & methods (characteristics & actions)
+class Program
+{
+    static void Main(string[] args)
+    {
+        Human human1 = new Human(); // creation of an Object (creating a new human using the attributes of the human class that we made)
+        Human human2 = new Human(); // another creation of a Object using the Human class we made. The class acts as a blueprint for what our objects will need 
+
+        human1.name = "Rick"; // this is assigning a value to our human using the variables in our human class
+        human1.age = 65; // this is assigning a value to our human using the variables in our human class
+
+        human1.Eat(); // this is Object.DOsomething. We basically take our object and then apply a method we used in the class to tell it to do something
+        human1.Sleep(); // this is Object.DOsomething. We basically take our object and then apply a method we used in the class to tell it to do something
+
+        human2.name = "Morty";
+        human2.age = 16;
+
+        human2.Eat();
+        human2.Sleep();
+
+    }
+
+}
+
+class Human
+{
+    public string name;
+    public int age;
+
+
+    public void Eat()
+    {
+        Console.WriteLine(name + " is eating");
+    }
+    public void Sleep()
+    {
+        Console.WriteLine(name + " is sleeping");
+    }
+    
+} END OF OBJECTS
+################################
+
+// CONSTRUCTORS 
+// They are a special method (function) in a class
+// They have the same name as the class 
+// Can be used to assign arguments to fields when creating an object
+class Program
+{
+    static void Main(string[] args)
+    {
+        Human human1 = new Human("Rick", 65); // creation of an Object (creating a new human using the attributes of the human class that we made)
+        Human human2 = new Human("Morty", 16); // another creation of a Object using the Human class we made. The class acts as a blueprint for what our objects will need 
+
+        human1.Eat(); // this is Object.DOsomething. We basically take our object and then apply a method we used in the class to tell it to do something
+        human1.Sleep(); // this is Object.DOsomething. We basically take our object and then apply a method we used in the class to tell it to do something
+
+        human2.Eat();
+        human2.Sleep();
+    }
+}
+
+class Human
+{
+    public string name;
+    public int age;
+
+    public Human(string name, int age) // constructor, a special method in a class (they work similarly to methods and functions)
+    {
+        this.name = name;
+        this.age = age;
+    }
+
+
+    public void Eat()
+    {
+        Console.WriteLine(name + " is eating");
+    }
+    public void Sleep()
+    {
+        Console.WriteLine(name + " is sleeping");
+    }
+    
+}
+
+// CONSTRUCTORS 
+// They are a special method (function) in a class
+// They have the same name as the class 
+// Can be used to assign arguments to fields when creating an object
+class Program
+{
+    static void Main(string[] args)
+    {
+        Car car1 = new Car("Ford", "Mustang", 2022, "red");
+        car1.Drive();
+
+        Car car2 = new Car("Chevy", "Corvette", 2021, "blue");
+        car2.Drive();
+    }
+}
+
+class Car
+{
+    string make;
+    string model;
+    int year;
+    string color;
+
+    public Car(string make, string model, int year, string color)
+    {
+        this.make = make;
+        this.model = model;
+        this.year = year;
+        this.color = color;
+    }
+
+    public void Drive()
+    {
+        Console.WriteLine("You drive the " + color + " " + make + " " + model);
+    }
+} END OF COUNSTRUCTORS
+######################################
+
+OVERLOADED CONSTRUCTORS 
+
+using System;
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        // overloaded constructors 
+        // using multiple constructors in a class
+        // it is to create multiple constructors with a different set of parameters
+
+        Pizza pizza = new Pizza("stuffed crust", "red sauce", "mozzarella");
+
+
+    }
+}
+
+class Pizza
+{
+    String bread;
+    String sauce;
+    String cheese;
+    String topping;
+    public Pizza(String bread)
+    {
+        this.bread = bread;
+        
+    }
+    public Pizza(String bread, String sauce)
+    {
+        this.bread = bread;
+        this.sauce = sauce;
+    }
+
+    public Pizza(String bread, String sauce, String cheese)
+    {
+        this.bread = bread;
+        this.sauce = sauce;
+        this.cheese = cheese;
+    }
+
+    public Pizza(String bread, String sauce, String cheese, String topping)
+    {
+        this.bread = bread;
+        this.sauce = sauce;
+        this.cheese = cheese;
+        this.topping = topping;
+    }
+} ######################### END OF OVERLOADED CONSTRUCTORS
+
+INHERITANCE
+using System;
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        // inheritance = 1 or more child classes recieving fields, methods, etc. from a common parent
+        Car car = new Car();
+        Bicycle bicycle = new Bicycle();
+        Boat boat = new Boat();
+
+        Console.WriteLine(car.speed);
+        Console.WriteLine(car.wheels);
+        car.Go();
+
+        Console.WriteLine(bicycle.speed);
+        Console.WriteLine(bicycle.wheels);
+        bicycle.Go();
+
+        Console.WriteLine(boat.speed);
+        Console.WriteLine(boat.wheels);
+        boat.Go();
+    }
+
+
+}
+
+class Vehicle
+{
+    public int speed = 0;
+
+    public void Go()
+    {
+        Console.WriteLine("This vehicle is moving");
+    
+    }
+}
+
+class Car : Vehicle
+{
+    public int wheels = 4;
+}
+
+class Bicycle : Vehicle
+{
+    public int wheels = 2;
+}
+
+class Boat : Vehicle
+{
+    public int wheels = 0;
+}############ END OF INHERITANCE
+
+ABSTRACT MODIFIER
+using System;
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        // abstract classes = modifier that indicates missing components or incomplete implementation
+        Car car = new Car();
+        Bicycle bicycle = new Bicycle();
+        Boat boat = new Boat();
+    }
+}
+
+abstract class Vehicle
+{
+    public int speed = 0;
+
+    public void go()
+    {
+        Console.WriteLine("This vehicle is moving!");
+    }
+}
+
+class Car : Vehicle
+{
+    public int wheels = 4;
+    int maxSpeed = 500;
+}
+class Bicycle : Vehicle
+{
+    public int wheels = 2;
+    int maxSpeed = 50;
+}
+
+class Boat : Vehicle
+{
+    public int wheels = 0;
+    int maxSpeed = 100;
+}################# END OF ABSTRACT MODIFIER
+
+CREATING AN ARRAY OF OBJECTS
+using System;
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        // Creating an Array of Objects!
+        // simpler but more lines
+        // Car[] garage = new Car[3];
+
+        // Car car1 = new Car("Mustang");
+        // Car car2 = new Car("Corvette");
+        // Car car3 = new Car("Lambo");
+
+        // garage[0] = car1;
+        // garage[1] = car2;
+        // garage[2] = car3;
+        // not as simple but less lines
+
+
+        Car[] garage = { new Car("Mustang"), new Car("Corvette"), new Car("Lambo") };
+
+        foreach (Car car in garage)
+        {
+            Console.WriteLine(car.model);
+        }    
+    }
+}
+
+class Car
+{
+    public String model;
+
+    public Car(String model)
+    {
+        this.model = model;
+    }
+}################# END OF ARRAY OF OBJECTS
+
+POLYMORPHISM
+
+using System;
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        // polymorphism = Greek word that means "Have many forms"
+        // Objects can be identified by more than one type
+        // Example. A Dog is also: Canine, Animal, Organism
+        Car car = new Car();
+        Bicycle bicycle = new Bicycle();
+        Boat boat = new Boat();
+
+        Vehicle[] vehicles = { car, bicycle, boat }; // array of objects that are different but all can use the Vehicle form
+
+        foreach (Vehicle vehicle in vehicles)
+        {
+            vehicle.Go();
+        }
+    }
+}
+
+class Vehicle
+{
+    public virtual void Go()
+    {
+        
+    }
+}
+class Car : Vehicle
+{
+    public override void Go()
+    {
+        Console.WriteLine("The car is moving");
+    }
+}
+
+class Bicycle : Vehicle
+{
+    public override void Go()
+    {
+        Console.WriteLine("The bicycle is moving");
+    }
+}
+class Boat : Vehicle
+{
+    public override void Go()
+    {
+        Console.WriteLine("The boat is moving");
+    }
+}########## END OF POLYMORPHISM

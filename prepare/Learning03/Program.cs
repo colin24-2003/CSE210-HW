@@ -24,7 +24,7 @@ class Program
         // testing the setters 
         f1.SetTop(7);
         f1.SetBottom(2);
-        Console.WriteLine(f1.GetFractionString()); 
-        Console.WriteLine(f1.GetDecimalValue());   
+        Console.WriteLine(f1.GetFractionString());
+        Console.WriteLine(f1.GetDecimalValue()); 
     }
 }

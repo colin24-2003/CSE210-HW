@@ -22,11 +22,14 @@ public class Fraction
          _top = top;
          _bottom = bottom;
     }
-    // Constructors
+    // Constructors don't return anything 
+    // Constructors also have the same name as the class
+    // Constructors put values into the attributes 
 
     //Getters and Setters
 
-    public int GetTop(){
+    public int GetTop()
+    {
         return _top;
     }
 
