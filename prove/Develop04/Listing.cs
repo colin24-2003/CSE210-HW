@@ -1,7 +1,7 @@
 public class Listing : Activity
 {
     private Random _random = new Random();
-    
+
     private List<string> _prompts = new List<string>
     {
         "--Who are people that you appreciate?--",

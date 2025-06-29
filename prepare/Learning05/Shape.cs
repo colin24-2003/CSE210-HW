@@ -10,7 +10,7 @@ public abstract class Shape
         Color = color;
     }
 
-    public string Color { get; set; }
+    public string Color { get; set; } // this is similar to doing private string _color;
 
     public abstract double GetArea();
 }

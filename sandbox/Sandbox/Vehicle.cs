@@ -49,7 +49,7 @@ public class Ford : Car
 
 public class Program2
 {
-    public static void Main(string[] args)
+    public static void Main2(string[] args)
     {
         Car car1 = new Car(2006, "Hyundai", "Sonata", 4);
         Ford ford1 = new Ford(2008, "F-150", 2);
