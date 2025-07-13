@@ -1,0 +1,111 @@
+----------------------------------------
+Welcome to the Stock Market Simulator!
+Player: Alice | Starting Cash: $10,000
+AI Investors: WarrenBot, RiskyRandy
+----------------------------------------
+
+Day 1:
+[News] 🚨 Global Tech Demand Surges!
+- Impact: +5% on all Tech Stocks
+
+Market Update:
+- AAPL: $150.00 → $157.50
+- TSLA: $720.00 → $756.00
+- GME: $18.00 → $17.10
+- AMZN: $3,200.00 → $3,296.00
+
+Your Portfolio:
+- Cash: $10,000.00
+- Holdings: None
+
+What would you like to do?
+1. Buy Stock
+2. Sell Stock
+3. Skip Day
+> 1
+
+Enter stock ticker to buy (e.g., AAPL):
+> AAPL
+Enter quantity to buy:
+> 20
+
+✅ Purchase successful: 20 shares of AAPL at $157.50
+Remaining Cash: $6,850.00
+
+[AI Action] WarrenBot bought 5 shares of AMZN
+[AI Action] RiskyRandy bought 100 shares of GME
+
+--- End of Day 1 Summary ---
+Alice: Portfolio Value = $10,000.00
+WarrenBot: $16,500.00 | RiskyRandy: $1,810.00
+----------------------------------------
+
+Day 2:
+[News] 📉 Market Crash Rumor Spooks Investors!
+- Impact: -10% on all stocks
+
+Market Update:
+- AAPL: $157.50 → $141.75
+- TSLA: $756.00 → $680.40
+- GME: $17.10 → $15.39
+- AMZN: $3,296.00 → $2,966.40
+
+Your Portfolio:
+- Cash: $6,850.00
+- Holdings:
+  - AAPL: 20 shares @ $141.75 → $2,835.00
+
+What would you like to do?
+1. Buy Stock
+2. Sell Stock
+3. Skip Day
+> 2
+
+Enter stock ticker to sell:
+> AAPL
+Enter quantity to sell:
+> 10
+
+✅ Sold 10 shares of AAPL @ $141.75
+New Cash Balance: $8,267.50
+
+[AI Action] WarrenBot held position
+[AI Action] RiskyRandy bought 50 shares of TSLA
+
+--- End of Day 2 Summary ---
+Alice: Portfolio Value = $11,102.50
+WarrenBot: $14,830.00 | RiskyRandy: $3,298.00
+----------------------------------------
+
+Day 3:
+[News] 🔬 AI Sector Growth Promising!
+- Impact: +8% on AI-related stocks (TSLA, NVDA)
+
+Market Update:
+- AAPL: $141.75 → $141.75
+- TSLA: $680.40 → $734.83
+- GME: $15.39 → $15.39
+- AMZN: $2,966.40 → $2,966.40
+
+Your Portfolio:
+- Cash: $8,267.50
+- Holdings:
+  - AAPL: 10 shares @ $141.75 → $1,417.50
+
+...
+
+[Continue simulation for more days or exit]
+
+
+
+
+
+[text](Allinvestors.cs)
+[text](Market.cs)
+[text](NewsEvent.cs)
+[text](Player.cs)
+[text](Portfolio.cs)
+[text](Program.cs)
+[text](SimulationEngine.cs)
+[text](Stock.cs)
+Transaction.cs
