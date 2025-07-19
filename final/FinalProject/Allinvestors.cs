@@ -1,119 +1,86 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 
 public class AIInvestor : Investor
 {
-    private double _riskTolerance; // 0.0 to 1.0
-    private double _tradingFrequency; // 0.0 to 1.0
-    private Random _random;
+    private string strategy;
+    private Random random;
 
-    public AIInvestor(string name, double startingCash, string strategy, double riskTolerance, double tradingFrequency)
-        : base(name, new Portfolio(startingCash), strategy)
+    public AIInvestor(string name, double startingCash, string strategy) : base(name, startingCash)
     {
-        _riskTolerance = riskTolerance;
-        _tradingFrequency = tradingFrequency;
-        _random = new Random();
+        this.strategy = strategy;
+        this.random = new Random();
     }
 
-    // Implementation of abstract method from Investor
-    public override void MakeDecision(Market market)
+    public override void TakeTurn(Market market)
     {
-        // Check if AI should trade this turn based on frequency
-        if (_random.NextDouble() > _tradingFrequency)
+        // AI decides randomly whether to trade
+        if (random.NextDouble() < 0.5) // 50% chance to trade
         {
-            Console.WriteLine($"[AI Action] {_name} held position");
-            return;
-        }
-
-        AnalyzeMarket(market);
-
-        // Decide whether to buy or sell based on strategy
-        if (_random.NextDouble() < 0.6) // 60% chance to buy
-        {
-            AttemptBuy(market);
-        }
-        else
-        {
-            AttemptSell(market);
-        }
-    }
-
-    // Analyze market conditions
-    private void AnalyzeMarket(Market market)
-    {
-        // Simple analysis - could be expanded with more sophisticated logic
-        var stocks = market.GetAllStocks();
-        // AI uses this to inform decisions (implementation can be expanded)
-    }
-
-    // Attempt to buy a stock
-    private void AttemptBuy(Market market)
-    {
-        Stock selectedStock = SelectStock(market.GetAllStocks());
-        if (selectedStock != null)
-        {
-            // Calculate quantity based on risk tolerance
-            double maxInvestment = _portfolio.GetCash() * _riskTolerance;
-            int quantity = (int)(maxInvestment / selectedStock.GetCurrentPrice());
-
-            if (quantity > 0 && CanAfford(selectedStock, quantity))
+            if (random.NextDouble() < 0.7) // 70% chance to buy, 30% to sell
             {
-                if (_portfolio.BuyStock(selectedStock, quantity))
-                {
-                    Console.WriteLine($"[AI Action] {_name} bought {quantity} shares of {selectedStock.GetTicker()}");
-                }
+                TryToBuy(market);
             }
             else
             {
-                Console.WriteLine($"[AI Action] {_name} held position");
-            }
-        }
-    }
-
-    // Attempt to sell a stock
-    private void AttemptSell(Market market)
-    {
-        var holdings = _portfolio.GetAllHoldings();
-        if (holdings.Count > 0)
-        {
-            var randomHolding = holdings.ElementAt(_random.Next(holdings.Count));
-            string ticker = randomHolding.Key;
-            int owned = randomHolding.Value;
-
-            // Sell a portion based on risk tolerance
-            int quantityToSell = Math.Max(1, (int)(owned * (1 - _riskTolerance)));
-
-            Stock stock = market.GetStock(ticker);
-            if (stock != null && _portfolio.SellStock(stock, quantityToSell))
-            {
-                Console.WriteLine($"[AI Action] {_name} sold {quantityToSell} shares of {ticker}");
+                TryToSell(market);
             }
         }
         else
         {
-            Console.WriteLine($"[AI Action] {_name} held position");
+            Console.WriteLine($"[AI Action] {Name} held position");
         }
     }
 
-    // Select stock based on AI strategy
-    private Stock SelectStock(List<Stock> stocks)
+    private void TryToBuy(Market market)
     {
-        if (stocks.Count == 0) return null;
+        var stocks = market.GetAllStocks();
+        if (stocks.Count == 0) return;
 
-        // Conservative investors prefer stable stocks
-        if (_riskTolerance < 0.5)
+        Stock stockToBuy = ChooseStock(stocks);
+        double maxSpend = Portfolio.Cash * (strategy == "Conservative" ? 0.2 : 0.4);
+        int quantity = (int)(maxSpend / stockToBuy.Price);
+
+        if (quantity > 0 && Portfolio.BuyStock(stockToBuy, quantity))
         {
-            return stocks.Where(s => s.GetCurrentPrice() > 100).OrderBy(s => s.GetPriceChangePercent()).FirstOrDefault() ?? stocks[0];
+            Console.WriteLine($"[AI Action] {Name} bought {quantity} shares of {stockToBuy.Ticker}");
         }
-        // Aggressive investors prefer volatile stocks
         else
         {
-            return stocks.OrderByDescending(s => Math.Abs(s.GetPriceChangePercent())).FirstOrDefault();
+            Console.WriteLine($"[AI Action] {Name} held position");
         }
     }
 
-    // Getters
-    public double GetRiskTolerance() => _riskTolerance;
-    public double GetTradingFrequency() => _tradingFrequency;
+    private void TryToSell(Market market)
+    {
+        if (Portfolio.Holdings.Count == 0)
+        {
+            Console.WriteLine($"[AI Action] {Name} held position");
+            return;
+        }
+
+        var randomStock = Portfolio.Holdings.Keys.ElementAt(random.Next(Portfolio.Holdings.Count));
+        int owned = Portfolio.Holdings[randomStock];
+        int toSell = Math.Max(1, owned / 2); // Sell half
+
+        Stock stock = market.GetStock(randomStock);
+        if (Portfolio.SellStock(stock, toSell))
+        {
+            Console.WriteLine($"[AI Action] {Name} sold {toSell} shares of {randomStock}");
+        }
+    }
+
+    private Stock ChooseStock(System.Collections.Generic.List<Stock> stocks)
+    {
+        if (strategy == "Conservative")
+        {
+            // Choose cheaper, stable stocks
+            return stocks.OrderBy(s => s.Price).First();
+        }
+        else
+        {
+            // Choose more expensive, volatile stocks  
+            return stocks.OrderByDescending(s => s.Price).First();
+        }
+    }
 }

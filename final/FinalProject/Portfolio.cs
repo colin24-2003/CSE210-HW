@@ -1,161 +1,85 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 public class Portfolio
 {
-    private double _cash;
-    private Dictionary<string, int> _holdings;
-    private List<Transaction> _transactions;
+    public double Cash { get; private set; }
+    public Dictionary<string, int> Holdings { get; private set; }
 
     public Portfolio(double startingCash)
     {
-        _cash = startingCash;
-        _holdings = new Dictionary<string, int>();
-        _transactions = new List<Transaction>();
+        Cash = startingCash;
+        Holdings = new Dictionary<string, int>();
     }
 
-    // Buy stock and add to holdings
     public bool BuyStock(Stock stock, int quantity)
     {
-        double totalCost = stock.GetCurrentPrice() * quantity;
-        
-        if (_cash >= totalCost)
+        double cost = stock.Price * quantity;
+        if (Cash >= cost)
         {
-            _cash -= totalCost;
+            Cash -= cost;
             
-            // Add to holdings
-            if (_holdings.ContainsKey(stock.GetTicker()))
-            {
-                _holdings[stock.GetTicker()] += quantity;
-            }
+            if (Holdings.ContainsKey(stock.Ticker))
+                Holdings[stock.Ticker] += quantity;
             else
-            {
-                _holdings[stock.GetTicker()] = quantity;
-            }
-
-            // Record transaction
-            Transaction transaction = new Transaction(
-                stock.GetTicker(), 
-                quantity, 
-                stock.GetCurrentPrice(), 
-                DateTime.Now, 
-                TransactionType.Buy
-            );
-            AddTransaction(transaction);
+                Holdings[stock.Ticker] = quantity;
             
             return true;
         }
-        
         return false;
     }
 
-    // Sell stock and remove from holdings
     public bool SellStock(Stock stock, int quantity)
     {
-        if (_holdings.ContainsKey(stock.GetTicker()) && _holdings[stock.GetTicker()] >= quantity)
+        if (Holdings.ContainsKey(stock.Ticker) && Holdings[stock.Ticker] >= quantity)
         {
-            double totalValue = stock.GetCurrentPrice() * quantity;
-            _cash += totalValue;
+            Cash += stock.Price * quantity;
+            Holdings[stock.Ticker] -= quantity;
             
-            _holdings[stock.GetTicker()] -= quantity;
-            
-            // Remove from holdings if quantity becomes 0
-            if (_holdings[stock.GetTicker()] == 0)
-            {
-                _holdings.Remove(stock.GetTicker());
-            }
-
-            // Record transaction
-            Transaction transaction = new Transaction(
-                stock.GetTicker(), 
-                quantity, 
-                stock.GetCurrentPrice(), 
-                DateTime.Now, 
-                TransactionType.Sell
-            );
-            AddTransaction(transaction);
+            if (Holdings[stock.Ticker] == 0)
+                Holdings.Remove(stock.Ticker);
             
             return true;
         }
-        
         return false;
     }
 
-    // Calculate total portfolio value including cash and stock holdings
     public double GetTotalValue(Market market)
     {
-        double totalValue = _cash;
+        double total = Cash;
         
-        foreach (var holding in _holdings)
+        foreach (var holding in Holdings)
         {
             Stock stock = market.GetStock(holding.Key);
             if (stock != null)
-            {
-                totalValue += stock.GetCurrentPrice() * holding.Value;
-            }
+                total += stock.Price * holding.Value;
         }
         
-        return totalValue;
+        return total;
     }
 
-    // Get number of shares owned for specific stock
-    public int GetHolding(string ticker)
+    public void Display(Market market)
     {
-        return _holdings.ContainsKey(ticker) ? _holdings[ticker] : 0;
-    }
-
-    // Add transaction to history
-    public void AddTransaction(Transaction transaction)
-    {
-        _transactions.Add(transaction);
-    }
-
-    // Display portfolio information
-    public void DisplayPortfolio()
-    {
-        Console.WriteLine($"- Cash: ${_cash:F2}");
+        Console.WriteLine($"- Cash: ${Cash:F2}");
         
-        if (_holdings.Count == 0)
+        if (Holdings.Count == 0)
         {
             Console.WriteLine("- Holdings: None");
         }
         else
         {
             Console.WriteLine("- Holdings:");
-            foreach (var holding in _holdings)
-            {
-                Console.WriteLine($"  - {holding.Key}: {holding.Value} shares");
-            }
+            ShowHoldings(market);
         }
     }
 
-    // Display detailed portfolio with current values
-    public void DisplayPortfolioWithValues(Market market)
+    public void ShowHoldings(Market market)
     {
-        Console.WriteLine($"- Cash: ${_cash:F2}");
-        
-        if (_holdings.Count == 0)
+        foreach (var holding in Holdings)
         {
-            Console.WriteLine("- Holdings: None");
-        }
-        else
-        {
-            Console.WriteLine("- Holdings:");
-            foreach (var holding in _holdings)
-            {
-                Stock stock = market.GetStock(holding.Key);
-                if (stock != null)
-                {
-                    double currentValue = stock.GetCurrentPrice() * holding.Value;
-                    Console.WriteLine($"  - {holding.Key}: {holding.Value} shares @ ${stock.GetCurrentPrice():F2} → ${currentValue:F2}");
-                }
-            }
+            Stock stock = market.GetStock(holding.Key);
+            double value = stock.Price * holding.Value;
+            Console.WriteLine($"  - {holding.Key}: {holding.Value} shares @ ${stock.Price:F2} → ${value:F2}");
         }
     }
-
-    // Getters
-    public double GetCash() => _cash;
-    public Dictionary<string, int> GetAllHoldings() => new Dictionary<string, int>(_holdings);
-    public List<Transaction> GetTransactionHistory() => new List<Transaction>(_transactions);
 }

@@ -2,67 +2,53 @@ using System;
 
 public class Player : Investor
 {
-    private double _startingCash;
+    public bool GameEnded { get; private set; } = false;
 
-    public Player(string name, double startingCash) 
-        : base(name, new Portfolio(startingCash), "Human Player")
-    {
-        _startingCash = startingCash;
-    }
+    public Player(string name, double startingCash) : base(name, startingCash) { }
 
-    // Implementation of abstract method from Investor
-    public override void MakeDecision(Market market)
+    public override void TakeTurn(Market market)
     {
-        ShowMenu();
+        // Show current portfolio
+        Console.WriteLine("\nYour Portfolio:");
+        Portfolio.Display(market);
+
+        // Show menu
+        Console.WriteLine("\nWhat would you like to do?");
+        Console.WriteLine("1. Buy Stock");
+        Console.WriteLine("2. Sell Stock");
+        Console.WriteLine("3. Skip Day");
+        Console.WriteLine("4. End Game");
+        Console.Write("> ");
+
         string choice = Console.ReadLine();
         
-        switch (choice?.ToUpper())
+        switch (choice)
         {
             case "1":
-            case "B":
-                HandleBuyStock(market);
+                BuyStock(market);
                 break;
             case "2":
-            case "S":
-                HandleSellStock(market);
-                break;
-            case "3":
-            case "P":
-                DisplayStatus();
+                SellStock(market);
                 break;
             case "4":
-            case "M":
-                market.DisplayMarketUpdate();
-                break;
-            case "5":
-            case "E":
-                Console.WriteLine("Ending turn...");
+                GameEnded = true;
+                Console.WriteLine("Ending game early...");
                 break;
             default:
-                Console.WriteLine("Invalid choice. Please try again.");
-                MakeDecision(market);
+                Console.WriteLine("Skipping day...");
                 break;
         }
     }
 
-    // Display trading menu options
-    public void ShowMenu()
+    private void BuyStock(Market market)
     {
-        Console.WriteLine("\n--- Trading Menu ---");
-        Console.WriteLine("1. (B)uy Stock");
-        Console.WriteLine("2. (S)ell Stock");
-        Console.WriteLine("3. (P)ortfolio Status");
-        Console.WriteLine("4. (M)arket Update");
-        Console.WriteLine("5. (E)nd Turn");
-        Console.Write("Enter your choice: ");
-    }
-
-    // Handle stock purchase with validation
-    private void HandleBuyStock(Market market)
-    {
-        Console.Write("Enter stock ticker: ");
-        string ticker = Console.ReadLine()?.ToUpper();
+        Console.WriteLine("\nAvailable Stocks:");
+        market.ShowAllStocks();
         
+        Console.Write("\nEnter stock ticker to buy (e.g., AAPL): ");
+        Console.Write("> ");
+        string ticker = Console.ReadLine()?.ToUpper();
+
         Stock stock = market.GetStock(ticker);
         if (stock == null)
         {
@@ -70,73 +56,65 @@ public class Player : Investor
             return;
         }
 
-        Console.Write("Enter quantity: ");
+        Console.Write("Enter quantity to buy: ");
+        Console.Write("> ");
         if (int.TryParse(Console.ReadLine(), out int quantity) && quantity > 0)
         {
-            BuyStock(stock, quantity);
-        }
-        else
-        {
-            Console.WriteLine("Invalid quantity!");
-        }
-    }
-
-    // Handle stock sale with validation
-    private void HandleSellStock(Market market)
-    {
-        Console.Write("Enter stock ticker: ");
-        string ticker = Console.ReadLine()?.ToUpper();
-        
-        Stock stock = market.GetStock(ticker);
-        if (stock == null)
-        {
-            Console.WriteLine("Stock not found!");
-            return;
-        }
-
-        Console.Write("Enter quantity: ");
-        if (int.TryParse(Console.ReadLine(), out int quantity) && quantity > 0)
-        {
-            SellStock(stock, quantity);
-        }
-        else
-        {
-            Console.WriteLine("Invalid quantity!");
-        }
-    }
-
-    // Buy stock with validation
-    public bool BuyStock(Stock stock, int quantity)
-    {
-        if (CanAfford(stock, quantity))
-        {
-            if (_portfolio.BuyStock(stock, quantity))
+            if (Portfolio.BuyStock(stock, quantity))
             {
-                Console.WriteLine($"Successfully bought {quantity} shares of {stock.GetTicker()} at ${stock.GetCurrentPrice():F2} each");
-                return true;
+                Console.WriteLine($"✅ Purchase successful: {quantity} shares of {ticker} at ${stock.Price:F2}");
+                Console.WriteLine($"Remaining Cash: ${Portfolio.Cash:F2}");
+            }
+            else
+            {
+                Console.WriteLine("❌ Not enough cash!");
             }
         }
         else
         {
-            Console.WriteLine($"Insufficient funds! Need ${stock.GetCurrentPrice() * quantity:F2}, have ${_portfolio.GetCash():F2}");
+            Console.WriteLine("Invalid quantity!");
         }
-        return false;
     }
 
-    // Sell stock with validation
-    public bool SellStock(Stock stock, int quantity)
+    private void SellStock(Market market)
     {
-        if (_portfolio.SellStock(stock, quantity))
+        if (Portfolio.Holdings.Count == 0)
         {
-            Console.WriteLine($"Successfully sold {quantity} shares of {stock.GetTicker()} at ${stock.GetCurrentPrice():F2} each");
-            return true;
+            Console.WriteLine("You don't own any stocks!");
+            return;
+        }
+
+        Console.WriteLine("\nYour Holdings:");
+        Portfolio.ShowHoldings(market);
+
+        Console.Write("\nEnter stock ticker to sell: ");
+        Console.Write("> ");
+        string ticker = Console.ReadLine()?.ToUpper();
+
+        if (!Portfolio.Holdings.ContainsKey(ticker))
+        {
+            Console.WriteLine("You don't own that stock!");
+            return;
+        }
+
+        Console.Write("Enter quantity to sell: ");
+        Console.Write("> ");
+        if (int.TryParse(Console.ReadLine(), out int quantity) && quantity > 0)
+        {
+            Stock stock = market.GetStock(ticker);
+            if (Portfolio.SellStock(stock, quantity))
+            {
+                Console.WriteLine($"✅ Sold {quantity} shares of {ticker} @ ${stock.Price:F2}");
+                Console.WriteLine($"New Cash Balance: ${Portfolio.Cash:F2}");
+            }
+            else
+            {
+                Console.WriteLine("❌ Can't sell that many shares!");
+            }
         }
         else
         {
-            Console.WriteLine($"Cannot sell {quantity} shares of {stock.GetTicker()}. You only own {_portfolio.GetHolding(stock.GetTicker())} shares.");
+            Console.WriteLine("Invalid quantity!");
         }
-        return false;
     }
-
-    public double GetStartingCash() => _startingCash;
 }
